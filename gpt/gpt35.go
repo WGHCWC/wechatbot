@@ -1,10 +1,11 @@
-// @Author Bing 
-// @Date 2023/3/6 20:31:00 
+// @Author Bing
+// @Date 2023/3/6 20:31:00
 // @Desc
 package gpt
 
 import (
 	"context"
+	"errors"
 	"github.com/otiai10/openaigo"
 	"github.com/qingconglaixueit/abing_logger"
 	"github.com/qingconglaixueit/wechatbot/config"
@@ -23,7 +24,7 @@ func NewGpr35() *openaigo.Client {
 	return openaigo.NewClient(cfg.ApiKey)
 }
 
-func (c *MyGpt) Gpt3P5(req string) string {
+func (c *MyGpt) Gpt3P5(req string) (string, error) {
 	request := openaigo.ChatCompletionRequestBody{
 		Model: "gpt-3.5-turbo",
 		Messages: []openaigo.ChatMessage{
@@ -34,12 +35,12 @@ func (c *MyGpt) Gpt3P5(req string) string {
 	rsp, err := c.C.Chat(ctx, request)
 	if err != nil {
 		abing_logger.SugarLogger.Errorf("gpt client chat erorr:%+v", err)
-		return ""
+		return "", errors.New("请求GTP ERROR")
 	}
 
 	if len(rsp.Choices) == 0 || rsp.Choices[0].Message.Content == "" {
-		return ""
+		return "", errors.New("请求GTP ERROR")
 	}
 
-	return rsp.Choices[0].Message.Content
+	return rsp.Choices[0].Message.Content, nil
 }
