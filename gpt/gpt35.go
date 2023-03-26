@@ -10,6 +10,10 @@ import (
 	"github.com/qingconglaixueit/wechatbot/config"
 )
 
+var MyGptClient = MyGpt{
+	C: NewGpr35(),
+}
+
 type MyGpt struct {
 	C *openaigo.Client
 }
